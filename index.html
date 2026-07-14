@@ -1,0 +1,1214 @@
+<!doctype html>
+<html lang="en">
+ <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260710-05-9ed98a3"}');</script><script src="/_sdk/f432b76fb310b513.telemetry_sdk.js" integrity="sha512-9FJQ55EKmmqhyyik8BhrMVfm0+iYYfb8uOlRsjtkxJMEI97qOVEI4PnHohDjQAtvAep0IOEpdQ64eki0sz62ug=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduConnect AI School Platform</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;family=Fraunces:opsz,wght@9..144,600;9..144,700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .glass { background: rgba(255,255,255,0.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.6); }
+    .fade-up { animation: fadeUp .55s cubic-bezier(.2,.7,.3,1) both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px);} to {opacity:1; transform:none;} }
+    .modal-shell { animation: pop .3s cubic-bezier(.2,.8,.3,1) both; }
+    @keyframes pop { from { opacity:0; transform:scale(.94);} to {opacity:1; transform:scale(1);} }
+    .card-hover { transition: transform .25s ease, box-shadow .25s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -12px rgba(79,70,229,.35); }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: rgba(124,58,237,.35); border-radius: 8px; }
+    [data-modal] { transition: opacity .2s ease; }
+  </style>
+  <script src="/_sdk/9432170dbd2ae0df.resizing_sdk.js" type="text/javascript" integrity="sha512-FeT+58sb1f9ejWPWFjCbJvTT+SDwGV+ngrHUnlO7TWEOoqwOLj6p256kO3vOL7DIWl1cIgrobiof8v2bOigwPg=="></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen w-full text-slate-800"><!-- ================= LANDING PORTAL ================= -->
+  <div id="landing-portal" class="w-full min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 py-12 relative overflow-hidden">
+   <div class="flex flex-col items-center gap-2 mb-8 fade-up text-center"><span class="w-16 h-16 rounded-2xl grid place-items-center text-white shadow-lg" style="background:linear-gradient(135deg,#4f46e5,#06b6d4)"><i data-lucide="graduation-cap" style="width:36px;height:36px"></i></span>
+    <h2 data-template-id="landing-title" class="canva-text font-extrabold" style="font-family:'Fraunces',serif"></h2>
+    <p data-template-id="landing-subtitle" class="canva-text text-sm sm:text-base max-w-md"></p>
+   </div><!-- Portal selection -->
+   <div id="portal-selector" class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl fade-up">
+    <div class="glass card-hover rounded-3xl p-6 sm:p-8 text-center flex flex-col justify-between items-center h-full">
+     <div class="flex flex-col items-center"><span class="w-14 h-14 rounded-2xl grid place-items-center text-indigo-600 bg-indigo-50 mb-4"><i data-lucide="shield-check" style="width:28px;height:28px"></i></span>
+      <h3 data-template-id="portal-teacher-title" class="canva-text font-bold mb-2"></h3>
+      <p data-template-id="portal-teacher-desc" class="canva-text mb-6"></p>
+     </div><button id="go-teacher-login" data-template-id="portal-teacher-btn" class="canva-button w-full py-3 rounded-xl font-semibold shadow-md"></button>
+    </div>
+    <div class="glass card-hover rounded-3xl p-6 sm:p-8 text-center flex flex-col justify-between items-center h-full">
+     <div class="flex flex-col items-center"><span class="w-14 h-14 rounded-2xl grid place-items-center text-cyan-600 bg-cyan-50 mb-4"><i data-lucide="users" style="width:28px;height:28px"></i></span>
+      <h3 data-template-id="portal-parent-title" class="canva-text font-bold mb-2"></h3>
+      <p data-template-id="portal-parent-desc" class="canva-text mb-6"></p>
+     </div><button id="go-parent-login" data-template-id="portal-parent-btn" class="canva-button w-full py-3 rounded-xl font-semibold shadow-md"></button>
+    </div>
+   </div><!-- Teacher login -->
+   <div id="teacher-login-screen" class="w-full max-w-md glass rounded-3xl p-6 sm:p-8 fade-up hidden">
+    <h3 data-template-id="teacher-login-title" class="canva-text font-bold text-center mb-2"></h3>
+    <p data-template-id="teacher-login-hint" class="canva-text text-xs text-center mb-6"></p>
+    <form id="teacher-login-form" class="space-y-4">
+     <div><label for="t-username" class="block text-xs font-semibold text-slate-500 mb-1">Username</label> <input id="t-username" type="text" required placeholder="Enter username" class="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+     </div>
+     <div><label for="t-password" class="block text-xs font-semibold text-slate-500 mb-1">Password</label> <input id="t-password" type="password" required placeholder="Enter password" class="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+     </div>
+     <p id="t-login-error" class="text-rose-500 text-sm hidden text-center"></p><button type="submit" data-template-id="teacher-submit-btn" class="canva-button w-full py-2.5 rounded-xl text-white font-semibold shadow-md"></button> <button type="button" class="back-to-portals-btn w-full text-center text-sm font-medium mt-2" data-template-id="teacher-back-btn"></button>
+    </form>
+   </div><!-- Parent login -->
+   <div id="parent-login-screen" class="w-full max-w-md glass rounded-3xl p-6 sm:p-8 fade-up hidden">
+    <h3 data-template-id="parent-login-title" class="canva-text font-bold text-center mb-6"></h3>
+    <div class="mb-4 p-3 rounded-xl bg-amber-50 text-amber-800 text-xs flex gap-2"><i data-lucide="info" class="shrink-0" style="width:16px;height:16px"></i> <span data-template-id="parent-login-note" class="canva-text"></span>
+    </div>
+    <form id="parent-login-form" class="space-y-4">
+     <div><label for="p-roll-login" class="block text-xs font-semibold text-slate-500 mb-1">Child's Roll Number (5 digits)</label> <input id="p-roll-login" type="text" required placeholder="e.g. 10001" class="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400">
+     </div>
+     <div><label for="p-parent-email" class="block text-xs font-semibold text-slate-500 mb-1">Parent Email</label> <input id="p-parent-email" type="email" required placeholder="parent@school.com" class="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400">
+     </div>
+     <p id="p-login-error" class="text-rose-500 text-sm hidden text-center"></p><button type="submit" data-template-id="parent-submit-btn" class="canva-button w-full py-2.5 rounded-xl text-white font-semibold shadow-md"></button> <button type="button" class="back-to-portals-btn w-full text-center text-sm font-medium mt-2" data-template-id="parent-back-btn"></button>
+    </form>
+   </div>
+  </div><!-- ================= DASHBOARD ================= -->
+  <div id="dashboard-app" class="w-full min-h-screen hidden">
+   <header class="w-full sticky top-0 z-40">
+    <nav class="glass w-full px-4 sm:px-8 py-3 flex items-center justify-between shadow-sm">
+     <div class="flex items-center gap-2"><span class="w-9 h-9 rounded-xl grid place-items-center text-white" style="background:linear-gradient(135deg,#4f46e5,#06b6d4)"><i data-lucide="graduation-cap" style="width:20px;height:20px"></i></span>
+      <h1 data-template-id="brand-name" class="canva-text font-bold" style="font-family:'Fraunces',serif"></h1>
+     </div><button id="nav-logout-btn" class="px-3 sm:px-4 py-2 rounded-full text-sm font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 flex items-center gap-1"><i data-lucide="log-out" style="width:14px;height:14px"></i> Sign Out</button>
+    </nav>
+   </header><!-- TEACHER VIEW -->
+   <main id="teacher-view" class="w-full max-w-7xl mx-auto px-4 sm:px-8 py-8">
+    <div class="fade-up flex flex-wrap items-center justify-between gap-3 mb-6">
+     <div>
+      <h2 data-template-id="teacher-title" class="canva-text font-bold" style="font-family:'Fraunces',serif"></h2>
+      <p data-template-id="teacher-subtitle" class="canva-text mt-1"></p>
+     </div>
+    </div><!-- SUMMARY CARDS -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"><button data-open="present" data-template-id="card-present" class="canva-card card-hover glass rounded-2xl p-4 text-left fade-up"><span class="w-10 h-10 rounded-xl grid place-items-center text-white mb-2" style="background:linear-gradient(135deg,#06b6d4,#0ea5e9)"><i data-lucide="check-circle" style="width:20px;height:20px"></i></span><p data-template-id="card-present-label" class="canva-text text-sm"></p><p id="stat-present" class="font-bold text-2xl text-cyan-600 mt-1">0</p></button> <button data-open="homework" data-template-id="card-homework" class="canva-card card-hover glass rounded-2xl p-4 text-left fade-up"><span class="w-10 h-10 rounded-xl grid place-items-center text-white mb-2" style="background:linear-gradient(135deg,#7c3aed,#a855f7)"><i data-lucide="book-open-check" style="width:20px;height:20px"></i></span><p data-template-id="card-homework-label" class="canva-text text-sm"></p><p id="stat-homework" class="font-bold text-2xl text-violet-600 mt-1">0</p></button> <button data-open="wellness" data-template-id="card-wellness" class="canva-card card-hover glass rounded-2xl p-4 text-left fade-up"><span class="w-10 h-10 rounded-xl grid place-items-center text-white mb-2" style="background:linear-gradient(135deg,#4f46e5,#8b5cf6)"><i data-lucide="smile" style="width:20px;height:20px"></i></span><p data-template-id="card-wellness-label" class="canva-text text-sm"></p><p id="stat-wellness" class="font-bold text-2xl text-indigo-600 mt-1">0</p></button> <button data-open="total" data-template-id="card-total" class="canva-card card-hover glass rounded-2xl p-4 text-left fade-up"><span class="w-10 h-10 rounded-xl grid place-items-center text-white mb-2" style="background:linear-gradient(135deg,#2563eb,#06b6d4)"><i data-lucide="users" style="width:20px;height:20px"></i></span><p data-template-id="card-total-label" class="canva-text text-sm"></p><p id="stat-total" class="font-bold text-2xl text-blue-600 mt-1">0</p></button> <button data-open="bus" data-template-id="card-bus" class="canva-card card-hover glass rounded-2xl p-4 text-left fade-up"><span class="w-10 h-10 rounded-xl grid place-items-center text-white mb-2" style="background:linear-gradient(135deg,#0891b2,#22d3ee)"><i data-lucide="bus" style="width:20px;height:20px"></i></span><p data-template-id="card-bus-label" class="canva-text text-sm"></p><p id="stat-bus" class="font-bold text-2xl text-cyan-600 mt-1">0</p></button> <button data-open="notify" data-template-id="card-notify" class="canva-card card-hover glass rounded-2xl p-4 text-left fade-up"><span class="w-10 h-10 rounded-xl grid place-items-center text-white mb-2" style="background:linear-gradient(135deg,#7c3aed,#4f46e5)"><i data-lucide="bell" style="width:20px;height:20px"></i></span><p data-template-id="card-notify-label" class="canva-text text-sm"></p><p id="stat-notify" class="font-bold text-2xl text-violet-600 mt-1">0</p></button> <button data-open="gate" data-template-id="card-gate" class="canva-card card-hover glass rounded-2xl p-4 text-left fade-up"><span class="w-10 h-10 rounded-xl grid place-items-center text-white mb-2" style="background:linear-gradient(135deg,#4f46e5,#06b6d4)"><i data-lucide="door-open" style="width:20px;height:20px"></i></span><p data-template-id="card-gate-label" class="canva-text text-sm"></p><p id="stat-gate" class="font-bold text-2xl text-indigo-600 mt-1">0</p></button> <button data-open="wellness" data-template-id="card-wellstatus" class="canva-card card-hover glass rounded-2xl p-4 text-left fade-up"> <span class="w-10 h-10 rounded-xl grid place-items-center text-white mb-2" style="background:linear-gradient(135deg,#22c55e,#06b6d4)"><i data-lucide="heart-pulse" style="width:20px;height:20px"></i></span> <p data-template-id="card-wellstatus-label" class="canva-text text-sm"></p><p id="stat-wellstatus" class="font-bold text-lg text-emerald-600 mt-1">—</p></button>
+    </section><!-- STUDENT MANAGEMENT -->
+    <section class="glass rounded-2xl p-5 mb-8 fade-up">
+     <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <h3 data-template-id="students-title" class="canva-text font-bold"></h3>
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+       <div class="relative flex-1 sm:flex-none"><i data-lucide="search" class="absolute left-3 top-2.5 text-slate-400" style="width:18px;height:18px"></i> <label for="student-search" class="sr-only" data-template-id="search-label"></label> <input id="student-search" type="text" placeholder="Search by name or roll" class="pl-9 pr-3 py-2 rounded-full bg-white/70 border border-white/70 text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-violet-400">
+       </div><button id="add-student-btn" data-template-id="add-student-btn" class="canva-button px-4 py-2 rounded-full text-sm font-semibold text-white whitespace-nowrap"></button>
+      </div>
+     </div>
+     <div id="student-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+     <p id="empty-state" data-template-id="empty-state" class="canva-text text-center py-10 hidden"></p>
+    </section><!-- ANALYTICS -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+     <div class="glass rounded-2xl p-5 fade-up">
+      <h3 data-template-id="chart-att-title" class="canva-text font-bold mb-3"></h3>
+      <canvas id="chart-attendance" height="180"></canvas>
+     </div>
+     <div class="glass rounded-2xl p-5 fade-up">
+      <h3 data-template-id="chart-marks-title" class="canva-text font-bold mb-3"></h3>
+      <canvas id="chart-marks" height="180"></canvas>
+     </div>
+     <div class="glass rounded-2xl p-5 fade-up">
+      <h3 data-template-id="chart-hw-title" class="canva-text font-bold mb-3"></h3>
+      <canvas id="chart-hw" height="180"></canvas>
+     </div>
+    </section><!-- REWARDS --> <!-- REWARDS -->
+    <section class="glass rounded-2xl p-5 mb-4 fade-up">
+     <div class="flex items-center justify-between mb-4">
+      <h3 data-template-id="rewards-title" class="canva-text font-bold"></h3><button id="view-rewards-btn" type="button" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"> View All Badges <i data-lucide="chevron-right" style="width:14px;height:14px"></i> </button>
+     </div>
+     <div id="rewards-preview-grid" class="grid grid-cols-2 md:grid-cols-5 gap-3 cursor-pointer" onclick="openRewardsBreakdown()">
+      <div data-template-id="badge-1" id="badge-btn-1" class="canva-card rounded-xl p-3 text-center text-white">
+       <i data-lucide="award" class="mx-auto mb-1"></i><span data-template-id="badge-1-text" class="canva-text text-xs font-semibold block"></span>
+      </div>
+      <div data-template-id="badge-2" id="badge-btn-2" class="canva-card rounded-xl p-3 text-center text-white">
+       <i data-lucide="star" class="mx-auto mb-1"></i><span data-template-id="badge-2-text" class="canva-text text-xs font-semibold block"></span>
+      </div>
+      <div data-template-id="badge-3" id="badge-btn-3" class="canva-card rounded-xl p-3 text-center text-white">
+       <i data-lucide="trophy" class="mx-auto mb-1"></i><span data-template-id="badge-3-text" class="canva-text text-xs font-semibold block"></span>
+      </div>
+      <div data-template-id="badge-4" id="badge-btn-4" class="canva-card rounded-xl p-3 text-center text-white">
+       <i data-lucide="flame" class="mx-auto mb-1"></i><span data-template-id="badge-4-text" class="canva-text text-xs font-semibold block"></span>
+      </div>
+      <div data-template-id="badge-5" id="badge-btn-5" class="canva-card rounded-xl p-3 text-center text-white">
+       <i data-lucide="calendar-check" class="mx-auto mb-1"></i><span data-template-id="badge-5-text" class="canva-text text-xs font-semibold block"></span>
+      </div>
+     </div>
+    </section>
+   </main><!-- PARENT VIEW -->
+   <main id="parent-view" class="w-full max-w-md mx-auto px-4 py-8 hidden">
+    <div class="text-center mb-5 fade-up">
+     <h2 data-template-id="parent-title" class="canva-text font-bold" style="font-family:'Fraunces',serif"></h2>
+     <p data-template-id="parent-subtitle" class="canva-text mt-1 text-sm"></p>
+    </div>
+    <div id="parent-empty" class="glass rounded-2xl p-8 text-center fade-up hidden">
+     <i data-lucide="user-x" class="mx-auto mb-2 text-violet-500"></i>
+     <p data-template-id="parent-empty-text" class="canva-text text-sm"></p>
+    </div>
+    <div id="parent-content" class="space-y-4 hidden">
+     <div class="glass rounded-2xl p-5 text-center fade-up">
+      <div id="parent-photo-container" class="w-24 h-24 rounded-2xl mx-auto shadow-lg overflow-hidden flex items-center justify-center font-bold text-2xl"></div>
+      <p id="parent-name" class="font-bold text-lg mt-3">—</p>
+      <p id="parent-class" class="text-sm text-slate-500">—</p>
+     </div>
+     <div class="grid grid-cols-2 gap-3">
+      <div class="glass rounded-2xl p-4 fade-up">
+       <p data-template-id="p-att-label" class="canva-text text-xs"></p>
+       <p id="parent-att" class="font-bold text-2xl text-cyan-600 mt-1">0%</p>
+      </div>
+      <div class="glass rounded-2xl p-4 fade-up">
+       <p data-template-id="p-perf-label" class="canva-text text-xs"></p>
+       <p id="parent-perf" class="font-bold text-2xl text-violet-600 mt-1">0%</p>
+      </div>
+     </div>
+     <div class="glass rounded-2xl p-5 fade-up">
+      <h3 data-template-id="p-ai-title" class="canva-text font-bold mb-2"></h3>
+      <p id="parent-ai" class="text-sm text-slate-600 mb-4">—</p><!-- Academic & Milestone Sub-section -->
+      <div class="border-t border-slate-100 pt-3 mt-3">
+       <h4 data-template-id="p-milestone-title" class="canva-text font-bold text-xs text-indigo-950 uppercase tracking-wider mb-2"></h4>
+       <div id="parent-milestones" class="space-y-2 text-xs"><!-- Populated dynamically -->
+       </div>
+      </div>
+     </div><!-- Parent Real-time Bus Tracking & Proximity Section -->
+     <div class="glass rounded-2xl p-5 fade-up">
+      <div class="flex items-center justify-between mb-3">
+       <h3 data-template-id="p-bus-title" class="canva-text font-bold"></h3><span id="parent-proximity-alert" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 animate-pulse hidden"></span>
+      </div><!-- Simulated Map Element with Tracking Radar Overlays -->
+      <div class="relative rounded-xl overflow-hidden mb-3"><img data-template-id="parent-bus-map" class="canva-image w-full h-44 object-cover" loading="lazy">
+       <div class="absolute inset-0 bg-slate-900/10 pointer-events-none"></div><!-- Real-time Location Indicator -->
+       <div class="absolute top-1/2 left-1/3 w-8 h-8 -ml-4 -mt-4 bg-cyan-500/20 rounded-full flex items-center justify-center animate-ping"></div>
+       <div class="absolute top-1/2 left-1/3 w-4 h-4 -ml-2 -mt-2 bg-cyan-600 rounded-full border-2 border-white flex items-center justify-center shadow-lg"><i data-lucide="bus" class="text-white" style="width:10px;height:10px"></i>
+       </div><!-- Home / Proximity Pin -->
+       <div class="absolute top-2/5 right-1/4 w-4 h-4 bg-rose-500 rounded-full border-2 border-white flex items-center justify-center shadow-lg"><i data-lucide="home" class="text-white" style="width:10px;height:10px"></i>
+       </div>
+      </div>
+      <div class="bg-cyan-50/50 border border-cyan-100 rounded-xl p-3 text-xs space-y-1.5 mb-2">
+       <div class="flex justify-between"><span class="text-slate-500">Route Status:</span> <span id="parent-bus-status" class="font-bold text-cyan-700">—</span>
+       </div>
+       <div class="flex justify-between"><span class="text-slate-500">Proximity Distance:</span> <span id="parent-bus-dist" class="font-bold text-cyan-700">—</span>
+       </div>
+       <div class="flex justify-between"><span class="text-slate-500">ETA:</span> <span id="parent-bus-eta" class="font-bold text-cyan-700">—</span>
+       </div>
+      </div>
+      <p id="parent-bus" class="text-xs text-slate-600 leading-relaxed">—</p>
+     </div><!-- Detailed Academic Progress Section -->
+     <div class="glass rounded-2xl p-5 fade-up">
+      <h3 data-template-id="p-marks-detail-title" class="canva-text font-bold mb-3"></h3>
+      <div class="space-y-3">
+       <div>
+        <div class="flex justify-between text-xs font-semibold mb-1"><span class="text-slate-600">Mathematics</span> <span id="p-math-val" class="text-indigo-600">—</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+         <div id="p-math-bar" class="bg-indigo-500 h-full rounded-full transition-all duration-500" style="width:0%"></div>
+        </div>
+       </div>
+       <div>
+        <div class="flex justify-between text-xs font-semibold mb-1"><span class="text-slate-600">Science</span> <span id="p-science-val" class="text-cyan-600">—</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+         <div id="p-science-bar" class="bg-cyan-500 h-full rounded-full transition-all duration-500" style="width:0%"></div>
+        </div>
+       </div>
+       <div>
+        <div class="flex justify-between text-xs font-semibold mb-1"><span class="text-slate-600">English Literature</span> <span id="p-english-val" class="text-violet-600">—</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+         <div id="p-english-bar" class="bg-violet-500 h-full rounded-full transition-all duration-500" style="width:0%"></div>
+        </div>
+       </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 flex gap-2"><i data-lucide="sparkles" class="text-indigo-500 shrink-0" style="width:14px;height:14px"></i> <span>Academic evaluations are calculated and updated in real-time by the class coordinator.</span>
+      </div>
+     </div>
+     <div class="glass rounded-2xl p-5 fade-up">
+      <h3 data-template-id="p-remarks-title" class="canva-text font-bold mb-2"></h3>
+      <p id="parent-remarks" class="text-sm text-slate-600 italic">—</p>
+     </div>
+    </div>
+   </main><!-- ================= MODALS ================= -->
+   <div id="modal-backdrop" data-modal class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-sm items-start justify-center overflow-y-auto py-8 px-4">
+    <div class="modal-shell glass rounded-3xl w-full max-w-2xl p-6 relative"><button id="modal-close" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/70 grid place-items-center hover:bg-white z-10"><i data-lucide="x" style="width:18px;height:18px"></i></button> <!-- PRESENT -->
+     <div data-panel="present" class="modal-panel hidden">
+      <h3 data-template-id="present-modal-title" class="canva-text font-bold mb-1"></h3>
+      <p data-template-id="present-modal-sub" class="canva-text text-sm mb-4"></p><label for="present-date" data-template-id="present-date-label" class="canva-text text-sm font-medium"></label> <input id="present-date" type="date" class="block mt-1 mb-4 px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+       <div>
+        <h4 data-template-id="present-list-label" class="canva-text font-semibold text-emerald-600 mb-2"></h4>
+        <div id="present-list" class="space-y-1 text-sm"></div>
+       </div>
+       <div>
+        <h4 data-template-id="absent-list-label" class="canva-text font-semibold text-rose-500 mb-2"></h4>
+        <div id="absent-list" class="space-y-1 text-sm"></div>
+       </div>
+      </div>
+     </div><!-- HOMEWORK -->
+     <div data-panel="homework" class="modal-panel hidden">
+      <h3 data-template-id="hw-modal-title" class="canva-text font-bold mb-1"></h3>
+      <p data-template-id="hw-modal-sub" class="canva-text text-sm mb-4"></p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+       <div>
+        <h4 data-template-id="hw-done-label" class="canva-text font-semibold text-violet-600 mb-2"></h4>
+        <div id="hw-done-list" class="space-y-1 text-sm"></div>
+       </div>
+       <div>
+        <h4 data-template-id="hw-pending-label" class="canva-text font-semibold text-amber-500 mb-2"></h4>
+        <div id="hw-pending-list" class="space-y-1 text-sm"></div>
+       </div>
+      </div>
+     </div><!-- WELLNESS -->
+     <div data-panel="wellness" class="modal-panel hidden">
+      <h3 data-template-id="well-modal-title" class="canva-text font-bold mb-1"></h3>
+      <p data-template-id="well-modal-sub" class="canva-text text-sm mb-4"></p>
+      <div class="grid grid-cols-3 gap-3 mb-4">
+       <div>
+        <h4 data-template-id="well-happy-label" class="canva-text font-semibold mb-2 text-center"></h4>
+        <div id="well-happy-list" class="space-y-1 text-sm text-center"></div>
+       </div>
+       <div>
+        <h4 data-template-id="well-neutral-label" class="canva-text font-semibold mb-2 text-center"></h4>
+        <div id="well-neutral-list" class="space-y-1 text-sm text-center"></div>
+       </div>
+       <div>
+        <h4 data-template-id="well-sad-label" class="canva-text font-semibold mb-2 text-center"></h4>
+        <div id="well-sad-list" class="space-y-1 text-sm text-center"></div>
+       </div>
+      </div>
+      <canvas id="chart-wellness" height="150"></canvas>
+     </div><!-- TOTAL DIRECTORY -->
+     <div data-panel="total" class="modal-panel hidden">
+      <h3 data-template-id="total-modal-title" class="canva-text font-bold mb-1"></h3>
+      <p data-template-id="total-modal-sub" class="canva-text text-sm mb-4"></p>
+      <div id="total-list" class="space-y-1.5 max-h-[50vh] overflow-y-auto"></div>
+     </div><!-- BUS -->
+     <div data-panel="bus" class="modal-panel hidden">
+      <h3 data-template-id="bus-modal-title" class="canva-text font-bold mb-1"></h3>
+      <p data-template-id="bus-modal-sub" class="canva-text text-sm mb-4"></p>
+      <div id="bus-fleet-list" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4"></div>
+      <div class="glass rounded-xl p-4 text-sm space-y-2">
+       <div class="grid grid-cols-2 gap-2">
+        <p><strong class="text-slate-600">Driver:</strong> <span id="active-bus-driver">—</span></p>
+        <p><strong class="text-slate-600">Contact:</strong> <span id="active-bus-contact">—</span></p>
+        <p><strong class="text-slate-600">Speed:</strong> <span id="active-bus-speed">—</span></p>
+        <p><strong class="text-slate-600">Current stop:</strong> <span id="active-bus-stop">—</span></p>
+       </div>
+       <p><strong class="text-slate-600">Route Waypoints:</strong> <span id="active-bus-route" class="text-xs text-slate-500 block mt-0.5"></span></p>
+       <p><strong class="text-slate-600">Live GPS Status:</strong> <span id="active-bus-gps" class="text-xs font-mono text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded-lg border border-cyan-100"></span></p>
+       <div class="pt-2">
+        <strong class="text-slate-600 block mb-1">Assigned Passengers &amp; Pick/Drop Points:</strong>
+        <div id="active-bus-passengers" class="flex flex-col gap-1.5 max-h-36 overflow-y-auto pr-1"></div>
+       </div>
+      </div>
+     </div><!-- NOTIFY -->
+     <div data-panel="notify" class="modal-panel hidden">
+      <h3 data-template-id="notify-modal-title" class="canva-text font-bold mb-1"></h3>
+      <p data-template-id="notify-modal-sub" class="canva-text text-sm mb-4"></p>
+      <form id="new-broadcast-form" class="glass rounded-xl p-3 mb-4 space-y-2"><label for="ann-title" data-template-id="ann-title-label" class="canva-text text-xs font-medium block"></label> <input id="ann-title" required placeholder="Title" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm"> <input id="ann-desc" required placeholder="Message body" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm"> <button type="submit" data-template-id="ann-send-btn" class="canva-button px-4 py-1.5 rounded-lg text-white text-sm font-semibold"></button>
+      </form>
+      <div id="announcements-log-container" class="space-y-2"></div>
+     </div><!-- GATE -->
+     <div data-panel="gate" class="modal-panel hidden">
+      <h3 data-template-id="gate-modal-title" class="canva-text font-bold mb-1"></h3>
+      <p data-template-id="gate-modal-sub" class="canva-text text-sm mb-4"></p><!-- Gate Pass Filters -->
+      <div class="grid grid-cols-2 gap-2 mb-4">
+       <div>
+        <label for="gate-search" class="sr-only">Search Gate Passes</label> <input id="gate-search" type="text" placeholder="Search roll/name..." class="w-full px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-400">
+       </div>
+       <div>
+        <label for="gate-filter-status" class="sr-only">Filter by Status</label> <select id="gate-filter-status" class="w-full px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-400"> <option value="all">All Gate Requests</option> <option value="Pending">Pending Only</option> <option value="Approved">Approved Only</option> <option value="Rejected">Rejected Only</option> </select>
+       </div>
+      </div>
+      <div id="gate-requests-container" class="space-y-2"></div>
+     </div><!-- REWARDS DETAILED BREAKDOWN -->
+     <div data-panel="rewards-breakdown" class="modal-panel hidden">
+      <h3 data-template-id="rewards-modal-title" class="canva-text font-bold mb-1"></h3>
+      <p data-template-id="rewards-modal-sub" class="canva-text text-sm mb-4"></p><!-- Timeline Filter -->
+      <div class="flex items-center gap-2 mb-4 bg-white/50 p-2.5 rounded-2xl border border-white/60">
+       <label for="rewards-timeline" class="text-xs font-semibold text-slate-500">History Filter:</label> <select id="rewards-timeline" class="px-2 py-1 rounded-lg text-xs bg-white border border-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-400"> <option value="current">Current Week (Live)</option> <option value="prev1">Previous Week (Week 1)</option> <option value="prev2">Previous Week (Week 2)</option> <option value="month">Monthly History (June/July)</option> <option value="year">Full Academic Year History</option> </select>
+      </div>
+      <div class="space-y-4 max-h-[55vh] overflow-y-auto pr-1">
+       <!-- Homework Hero badge-panel -->
+       <div class="glass p-4 rounded-2xl border border-violet-100">
+        <div class="flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-white grid place-items-center"><i data-lucide="award" style="width:16px;height:16px"></i></span>
+         <div>
+          <h4 class="font-bold text-sm text-indigo-950">Homework Hero</h4>
+          <p class="text-[10px] text-slate-400">100% homework submission and active streaks</p>
+         </div>
+        </div>
+        <div id="hw-heroes-list" class="space-y-2"></div>
+       </div><!-- Attendance Star badge-panel -->
+       <div class="glass p-4 rounded-2xl border border-cyan-100">
+        <div class="flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 text-white grid place-items-center"><i data-lucide="star" style="width:16px;height:16px"></i></span>
+         <div>
+          <h4 class="font-bold text-sm text-cyan-950">Attendance Star</h4>
+          <p class="text-[10px] text-slate-400">Top attendance tracking (above 90%)</p>
+         </div>
+        </div>
+        <div id="att-stars-list" class="space-y-2"></div>
+       </div><!-- Top Performer badge-panel -->
+       <div class="glass p-4 rounded-2xl border border-purple-100">
+        <div class="flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-500 text-white grid place-items-center"><i data-lucide="trophy" style="width:16px;height:16px"></i></span>
+         <div>
+          <h4 class="font-bold text-sm text-purple-950">Top Performer</h4>
+          <p class="text-[10px] text-slate-400">Ranked by performance scoring</p>
+         </div>
+        </div>
+        <div id="top-performers-list" class="space-y-2"></div>
+       </div><!-- Consistency Champ badge-panel -->
+       <div class="glass p-4 rounded-2xl border border-blue-100">
+        <div class="flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white grid place-items-center"><i data-lucide="flame" style="width:16px;height:16px"></i></span>
+         <div>
+          <h4 class="font-bold text-sm text-blue-950">Consistency Champion</h4>
+          <p class="text-[10px] text-slate-400">Maintained high score, homework, &amp; attendance</p>
+         </div>
+        </div>
+        <div id="consistency-champs-list" class="space-y-2"></div>
+       </div><!-- Class Superstar badge-panel -->
+       <div class="glass p-4 rounded-2xl border border-emerald-100">
+        <div class="flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 text-white grid place-items-center"><i data-lucide="calendar-check" style="width:16px;height:16px"></i></span>
+         <div>
+          <h4 class="font-bold text-sm text-emerald-950">Class Superstar</h4>
+          <p class="text-[10px] text-slate-400">Evaluated on attendance, marks, homework, wellness, and remarks</p>
+         </div>
+        </div>
+        <div id="class-superstars-list" class="space-y-2"></div>
+       </div>
+      </div>
+     </div><!-- STUDENT FORM -->
+     <div data-panel="form" class="modal-panel hidden">
+      <h3 id="form-heading" data-template-id="form-title" class="canva-text font-bold mb-4"></h3>
+      <form id="student-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+       <div>
+        <label for="f-roll" data-template-id="f-roll-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-roll" required maxlength="5" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-name" data-template-id="f-name-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-name" required class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-class" data-template-id="f-class-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-class" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-div" data-template-id="f-div-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-div" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-pname" data-template-id="f-pname-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-pname" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-pcontact" data-template-id="f-pcontact-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-pcontact" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-pemail" data-template-id="f-pemail-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-pemail" type="email" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-blood" data-template-id="f-blood-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-blood" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div class="sm:col-span-2">
+        <label for="f-address" data-template-id="f-address-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-address" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-att" data-template-id="f-att-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-att" type="number" min="0" max="100" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-perf" data-template-id="f-perf-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-perf" type="number" min="0" max="100" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-math" data-template-id="f-math-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-math" type="number" min="0" max="100" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-science" data-template-id="f-science-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-science" type="number" min="0" max="100" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-english" data-template-id="f-english-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-english" type="number" min="0" max="100" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-bus" data-template-id="f-bus-label" class="canva-text text-xs font-medium block mb-1"></label><input id="f-bus" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm">
+       </div>
+       <div>
+        <label for="f-gate" data-template-id="f-gate-label" class="canva-text text-xs font-medium block mb-1"></label><select id="f-gate" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm"><option value="None">None</option><option value="Pending">Pending</option><option value="Approved">Approved</option></select>
+       </div>
+       <div>
+        <label for="f-well" data-template-id="f-well-label" class="canva-text text-xs font-medium block mb-1"></label><select id="f-well" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm"><option value="happy">Happy 😊</option><option value="neutral">Neutral 😐</option><option value="sad">Sad 😔</option></select>
+       </div>
+       <div class="flex items-center gap-2 self-end pb-1">
+        <input id="f-present" type="checkbox" class="w-4 h-4"><label for="f-present" data-template-id="f-present-label" class="canva-text text-xs font-medium"></label>
+       </div>
+       <div class="flex items-center gap-2 self-end pb-1">
+        <input id="f-hw" type="checkbox" class="w-4 h-4"><label for="f-hw" data-template-id="f-hw-label" class="canva-text text-xs font-medium"></label>
+       </div>
+       <div class="sm:col-span-2">
+        <label for="f-remarks" data-template-id="f-remarks-label" class="canva-text text-xs font-medium block mb-1"></label><textarea id="f-remarks" rows="2" class="w-full px-3 py-2 rounded-lg bg-white/70 border border-white/70 text-sm"></textarea>
+       </div>
+       <p id="form-error" class="sm:col-span-2 text-rose-500 text-sm hidden"></p>
+       <div class="sm:col-span-2 flex gap-2 mt-2">
+        <button type="submit" id="form-save" data-template-id="form-save-btn" class="canva-button flex-1 py-2 rounded-lg text-white font-semibold"></button><button type="button" id="form-cancel" data-template-id="form-cancel-btn" class="canva-button px-5 py-2 rounded-lg font-semibold"></button>
+       </div>
+      </form>
+     </div><!-- PROFILE -->
+     <div data-panel="profile" class="modal-panel hidden">
+      <div class="flex items-center gap-4 mb-4">
+       <div id="profile-photo-container" class="w-20 h-20 rounded-2xl shadow overflow-hidden flex items-center justify-center font-bold text-xl"></div>
+       <div>
+        <h3 id="profile-name" class="font-bold text-xl">—</h3>
+        <p id="profile-meta" class="text-sm text-slate-500">—</p>
+       </div>
+      </div>
+      <div id="profile-info" class="grid grid-cols-2 gap-2 text-sm mb-4"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+       <div class="glass rounded-xl p-3">
+        <h4 data-template-id="profile-marks-title" class="canva-text font-semibold text-sm mb-2"></h4>
+        <canvas id="chart-profile-marks" height="140"></canvas>
+       </div>
+       <div class="glass rounded-xl p-3">
+        <h4 data-template-id="profile-growth-title" class="canva-text font-semibold text-sm mb-2"></h4>
+        <canvas id="chart-profile-growth" height="140"></canvas>
+       </div>
+      </div>
+      <div class="glass rounded-xl p-3 mb-4">
+       <h4 data-template-id="profile-ai-title" class="canva-text font-semibold text-sm mb-1"></h4>
+       <p id="profile-ai" class="text-sm text-slate-600">—</p>
+      </div>
+      <div class="flex gap-2">
+       <button id="profile-edit" data-template-id="profile-edit-btn" class="canva-button flex-1 py-2 rounded-lg text-white font-semibold"></button><button id="profile-delete" data-template-id="profile-delete-btn" class="canva-button px-4 py-2 rounded-lg font-semibold"></button>
+      </div>
+      <div id="profile-confirm" class="hidden mt-3 glass rounded-lg p-3 text-center">
+       <p data-template-id="profile-confirm-text" class="canva-text text-sm mb-2"></p>
+       <div class="flex gap-2 justify-center">
+        <button id="profile-confirm-yes" data-template-id="profile-confirm-yes" class="canva-button px-4 py-1.5 rounded-lg text-white text-sm font-semibold"></button><button id="profile-confirm-no" data-template-id="profile-confirm-no" class="canva-button px-4 py-1.5 rounded-lg text-sm font-semibold"></button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- student row template -->
+   <template id="student-row-template"><button data-template-id="student-row" class="canva-card student-row glass card-hover rounded-xl p-3 text-left flex items-center gap-3 w-full">
+     <div class="row-photo-avatar w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm shadow-sm shrink-0"></div>
+     <div class="min-w-0 flex-1">
+      <p class="row-name font-semibold truncate">—</p>
+      <p class="row-meta text-xs text-slate-500 truncate">—</p>
+     </div><span class="row-well text-xl"></span> </button>
+   </template>
+  </div>
+  <script src="/_sdk/719055fef2a85d14.editing_sdk.js" integrity="sha512-kFqrdGgIiTOsu307feB5Cy3JVP9IayftsmCIZ0csxYBGuBmJQPhyvcnmKR8F0fTW97h5s1gAvz3SumI8zJ6OxQ=="></script>
+  <script src="/_sdk/0179d719c431a79e.data_sdk.js" integrity="sha512-OsRvJkI5GkC3MJQcgotQYotpzrMSX415GiKKgvYdxQEEkzD/fdchShO2FMSy0PJr/tiINMXOk5Vl2zAgg6bUiA=="></script>
+  <script>
+    let students = [];
+    let editingRoll = null;
+    let profileRoll = null;
+    const charts = {};
+    let currentUserRole = null;
+    let currentLinkedRoll = null;
+    let selectedBusNum = 'Bus 12';
+    let selectedRewardsTimeline = 'current';
+
+    // In-memory demo data (not persisted — reference content)
+    let announcements = [
+      { id: 1, title: 'Annual PTA General Assembly', body: 'Please attend the PTA assembly this Wednesday to discuss the academic calendar and wellness goals.', date: '2026-07-15', sender: "Principal's Office", read: false },
+      { id: 2, title: 'Monsoon Safety Advisory', body: 'Special bus routes will operate under rainy-weather alerts. Drivers have been verified.', date: '2026-07-10', sender: 'Safety & Security', read: true },
+      { id: 3, title: 'Term 1 Report Cards', body: 'Marks certificates are now visible in parent profiles.', date: '2026-07-01', sender: 'Registrar', read: true }
+    ];
+    let gatePasses = [];
+    const busesFleet = [
+      { number: 'Bus 12', driver: 'Devendra Singh', contact: '+91 91102 38491', route: 'Chembur East – Sion Circle', speed: '42 km/h', stop: 'Sion Depot Corner', active: true, lat: "19.0330° N", lon: "72.8626° E", waypoints: "Chembur Naka -> Chunabhatti -> Sion Circle -> School" },
+      { number: 'Bus 4', driver: 'Gopal Krishnan', contact: '+91 88402 11093', route: 'Bandra West – Juhu Link', speed: '55 km/h', stop: 'Linking Road', active: true, lat: "19.0596° N", lon: "72.8295° E", waypoints: "Bandra Terminus -> National College -> Linking Road -> Juhu -> School" },
+      { number: 'Bus 9', driver: 'Prakash Koli', contact: '+91 99018 77551', route: 'Andheri West – Versova', speed: '0 km/h', stop: 'School Parking Lot', active: false, lat: "19.1136° N", lon: "72.8697° E", waypoints: "Versova Metro -> Seven Bungalows -> Lokhandwala -> School" }
+    ];
+
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+    const wellEmoji = w => w === 'happy' ? '😊' : w === 'sad' ? '😔' : '😐';
+    const seedDate = '2026-07-12';
+
+    function getInitials(name) {
+      if (!name) return 'ST';
+      return name.split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase();
+    }
+    function avatarColor(roll) {
+      const colors = ['from-indigo-500 to-cyan-500','from-purple-500 to-indigo-500','from-cyan-500 to-teal-500','from-emerald-500 to-teal-500','from-rose-500 to-pink-500','from-amber-500 to-orange-500'];
+      const idx = roll ? parseInt(roll, 10) % colors.length : 0;
+      return 'bg-gradient-to-br ' + colors[isNaN(idx) ? 0 : idx] + ' text-white';
+    }
+    function presentOnDate(roll, date) {
+      const base = roll ? roll.split('').reduce((a, c) => a + c.charCodeAt(0), 0) : 0;
+      const d = date.split('-').reduce((a, c) => a + parseInt(c, 10), 0);
+      return (base + d) % 5 !== 0;
+    }
+
+    // ---------- DATA SDK ----------
+    const dataHandler = {
+      async onDataChanged(data) {
+        students = data || [];
+        syncGatePasses();
+        
+        // Ensure initial seeds are stored in database if missing and we are in teacher role
+        if (students.length === 0 && currentUserRole === 'teacher') {
+          // Fallback to avoid complete empty state on first usage when backend is entirely clean
+        }
+        
+        render();
+      }
+    };
+    (async () => {
+      const res = await window.dataSdk.init(dataHandler);
+      if (!res.isOk) { $('empty-state').textContent = 'Could not load data.'; $('empty-state').classList.remove('hidden'); }
+    })();
+
+    // Synchronize current students list with Gate Pass module so newly added students automatically appear if they have active gate pass status
+    function syncGatePasses() {
+      // Clear out previous gate passes list to ensure we only show passes for students that actually exist in our current ledger
+      gatePasses = [];
+      students.forEach(s => {
+        if (s.gate_pass && s.gate_pass !== 'None') {
+          gatePasses.push({
+            id: Date.now() + parseInt(s.roll_number || '0', 10),
+            name: s.name,
+            roll_number: s.roll_number,
+            time: '12:00 PM',
+            reason: s.teacher_remarks || 'Early leave request.',
+            status: s.gate_pass
+          });
+        }
+      });
+    }
+
+    // ---------- RENDER ----------
+    function render() {
+      if (currentUserRole === 'teacher') renderTeacher();
+      if (currentUserRole === 'parent') renderParent();
+    }
+
+    function renderTeacher() {
+      const total = students.length;
+      $('stat-total').textContent = total;
+      $('stat-present').textContent = students.filter(s => s.present_today).length;
+      $('stat-homework').textContent = students.filter(s => s.homework_done).length;
+      $('stat-wellness').textContent = students.filter(s => s.wellness === 'happy').length;
+      
+      // Sync running status based on actually assigned students as well
+      const runningBuses = new Set(students.map(s => s.bus_number).filter(Boolean));
+      busesFleet.forEach(b => {
+        if (runningBuses.has(b.number)) {
+          b.active = true;
+          if (b.speed === '0 km/h') {
+            b.speed = '45 km/h';
+          }
+        } else {
+          // If no student is assigned to this bus, set it back to its original state or idle
+          if (b.number === 'Bus 9') b.active = false;
+        }
+      });
+      $('stat-bus').textContent = Math.max(1, busesFleet.filter(b => b.active).length);
+
+      $('stat-homework').textContent = students.filter(s => s.homework_done).length;
+      $('stat-wellness').textContent = students.filter(s => s.wellness === 'happy').length;
+      $('stat-notify').textContent = announcements.length;
+      $('stat-gate').textContent = gatePasses.filter(g => g.status === 'Pending').length;
+      const sad = students.filter(s => s.wellness === 'sad').length;
+      $('stat-wellstatus').textContent = sad > total * 0.3 ? 'High Risk' : sad > 0 ? 'Medium' : 'Low Risk';
+      renderList();
+      renderCharts();
+      lucide.createIcons();
+    }
+
+    function renderList() {
+      const q = ($('student-search').value || '').toLowerCase();
+      const list = $('student-list');
+      const filtered = students.filter(s => (s.name || '').toLowerCase().includes(q) || (s.roll_number || '').includes(q));
+      const existing = new Map([...list.children].map(el => [el.dataset.roll, el]));
+      filtered.forEach(s => {
+        let el = existing.get(s.roll_number);
+        if (!el) {
+          el = document.getElementById('student-row-template').content.cloneNode(true).firstElementChild;
+          el.dataset.roll = s.roll_number;
+          el.addEventListener('click', () => openProfile(s.roll_number));
+          list.appendChild(el);
+        } else existing.delete(s.roll_number);
+        el.querySelector('.row-name').textContent = s.name || '—';
+        el.querySelector('.row-meta').textContent = `Roll ${s.roll_number} • ${s.class_name || '-'} ${s.division || ''}`;
+        el.querySelector('.row-well').textContent = wellEmoji(s.wellness);
+        const pic = el.querySelector('.row-photo-avatar');
+        pic.className = `row-photo-avatar w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm shadow-sm shrink-0 ${avatarColor(s.roll_number)}`;
+        pic.textContent = getInitials(s.name);
+      });
+      existing.forEach(el => el.remove());
+      $('empty-state').classList.toggle('hidden', filtered.length > 0);
+    }
+
+    function mkChart(id, cfg) { if (charts[id]) charts[id].destroy(); const c = $(id); if (!c) return; charts[id] = new Chart(c, cfg); }
+    function chartOpts() { return { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.05)' } }, x: { grid: { display: false } } } }; }
+
+    function renderCharts() {
+      const names = students.slice(0, 6).map(s => (s.name ? s.name.split(' ')[0] : s.roll_number));
+      const avgAtt = students.length ? Math.round(students.reduce((a, s) => a + (s.attendance_pct || 0), 0) / students.length) : 85;
+      mkChart('chart-attendance', { type: 'line', data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], datasets: [{ label: 'Attendance %', data: [92, 88, 95, 90, avgAtt], borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,.15)', fill: true, tension: .4 }] }, options: chartOpts() });
+      mkChart('chart-marks', { type: 'bar', data: { labels: names.length ? names : ['—'], datasets: [{ label: 'Performance', data: students.slice(0, 6).map(s => s.performance_pct || 0), backgroundColor: ['#4f46e5', '#7c3aed', '#06b6d4', '#2563eb', '#a855f7', '#0ea5e9'] }] }, options: chartOpts() });
+      const hwPct = students.length ? Math.round(students.filter(s => s.homework_done).length / students.length * 100) : 0;
+      mkChart('chart-hw', { type: 'doughnut', data: { labels: ['Completed', 'Pending'], datasets: [{ data: [hwPct, 100 - hwPct], backgroundColor: ['#7c3aed', '#e2e8f0'], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '65%' } });
+    }
+
+    // REWARDS DETAILED BREAKDOWN MODAL GENERATOR WITH HISTORY FILTERING
+    function openRewardsBreakdown() {
+      renderRewardsBreakdown();
+      openModal('rewards-breakdown');
+    }
+
+    function renderRewardsBreakdown() {
+      const mode = selectedRewardsTimeline;
+      
+      // Determine deterministic offsets to simulate historical data safely for all past weeks/months
+      let hMod = 0, aMod = 0, pMod = 0;
+      let dateString = "July 12, 2026 (Current Week)";
+      if (mode === 'prev1') { hMod = -5; aMod = -3; pMod = -4; dateString = "July 05, 2026 (Previous Week)"; }
+      if (mode === 'prev2') { hMod = -10; aMod = -7; pMod = -8; dateString = "June 28, 2026 (Week 2)"; }
+      if (mode === 'month') { hMod = -2; aMod = -1; pMod = -3; dateString = "June 2026 (Monthly Average)"; }
+      if (mode === 'year') { hMod = -1; aMod = -2; pMod = -2; dateString = "2025-2026 Academic Year Archive"; }
+
+      $('rewards-modal-sub').textContent = `Displaying historical awards for ${dateString}. Select other periods above.`;
+
+      // Check if we have persistent historical data for the selected period
+      const storedHistory = students.filter(s => s.record_type === 'history_snapshot' && s.period_key === mode);
+      
+      // If we have saved history snapshots, we rebuild current snapshot list from them
+      let sourceStudents = students.filter(s => !s.record_type || s.record_type === 'student');
+      let isSnapshotUsed = false;
+
+      if (storedHistory.length > 0) {
+        try {
+          const snapshot = JSON.parse(storedHistory[0].snapshot_json);
+          if (Array.isArray(snapshot) && snapshot.length > 0) {
+            sourceStudents = snapshot;
+            isSnapshotUsed = true;
+          }
+        } catch(e) {
+          console.error("Error parsing snapshot", e);
+        }
+      }
+
+      // 1. Homework Hero
+      const hwList = $('hw-heroes-list');
+      const heroes = sourceStudents.filter(s => s.homework_done || (s.performance_pct && s.performance_pct > 75));
+      hwList.innerHTML = heroes.length ? heroes.map(s => {
+        const pct = Math.max(50, Math.min(100, (s.performance_pct || 80) + 15 + (isSnapshotUsed ? 0 : hMod)));
+        const streak = Math.max(2, Math.min(15, Math.floor((s.attendance_pct || 90) / 10) + (s.homework_done ? 3 : 0)));
+        return `
+          <div class="flex items-center justify-between p-2 rounded-xl bg-white/40 border border-slate-100 hover:bg-white transition text-xs cursor-pointer" onclick="closeModal(); openProfile('${esc(s.roll_number)}')">
+            <div>
+              <p class="font-bold text-slate-800">${esc(s.name)} <span class="text-slate-400 font-normal">(${esc(s.roll_number)})</span></p>
+              <p class="text-[10px] text-slate-400">Class: ${esc(s.class_name || '7th')} • Streak: <span class="font-semibold text-violet-600">${streak} weeks</span></p>
+            </div>
+            <div class="text-right">
+              <span class="font-bold text-violet-600">${pct}% Done</span>
+            </div>
+          </div>`;
+      }).join('') : '<p class="text-slate-400 text-xs py-2 text-center">No homework rewards recorded for this week.</p>';
+
+      // 2. Attendance Star
+      const attList = $('att-stars-list');
+      const stars = sourceStudents.filter(s => (s.attendance_pct || 0) >= 85);
+      attList.innerHTML = stars.length ? stars.map(s => {
+        const currentAtt = Math.max(70, Math.min(100, (s.attendance_pct || 90) + (isSnapshotUsed ? 0 : aMod)));
+        const workingDays = mode === 'year' ? 180 : 30;
+        const presentDays = Math.round(workingDays * (currentAtt / 100));
+        return `
+          <div class="flex items-center justify-between p-2 rounded-xl bg-white/40 border border-slate-100 hover:bg-white transition text-xs cursor-pointer" onclick="closeModal(); openProfile('${esc(s.roll_number)}')">
+            <div>
+              <p class="font-bold text-slate-800">${esc(s.name)} <span class="text-slate-400 font-normal">(${esc(s.roll_number)})</span></p>
+              <p class="text-[10px] text-slate-400">Present Days: <span class="font-semibold text-cyan-600">${presentDays}/${workingDays}</span></p>
+            </div>
+            <div class="text-right">
+              <span class="font-bold text-cyan-600">${currentAtt}%</span>
+            </div>
+          </div>`;
+      }).join('') : '<p class="text-slate-400 text-xs py-2 text-center">No high attendance stars recorded for this period.</p>';
+
+      // 3. Top Performer
+      const perfList = $('top-performers-list');
+      const tops = [...sourceStudents].sort((a,b) => (b.performance_pct || 0) - (a.performance_pct || 0)).slice(0, 5);
+      perfList.innerHTML = tops.length ? tops.map((s, idx) => {
+        const score = Math.max(40, Math.min(100, (s.performance_pct || 75) + (isSnapshotUsed ? 0 : pMod)));
+        const avgMarks = Math.round(((s.marks_math || 80) + (s.marks_science || 85) + (s.marks_english || 90)) / 3);
+        return `
+          <div class="flex items-center justify-between p-2 rounded-xl bg-white/40 border border-slate-100 hover:bg-white transition text-xs cursor-pointer" onclick="closeModal(); openProfile('${esc(s.roll_number)}')">
+            <div>
+              <p class="font-bold text-slate-800">#${idx + 1} ${esc(s.name)} <span class="text-slate-400 font-normal">(${esc(s.roll_number)})</span></p>
+              <p class="text-[10px] text-slate-400">Avg Marks: <span class="font-semibold text-purple-600">${avgMarks}/100</span></p>
+            </div>
+            <div class="text-right">
+              <span class="font-bold text-purple-600">${score}% Score</span>
+            </div>
+          </div>`;
+      }).join('') : '<p class="text-slate-400 text-xs py-2 text-center">No performance rewards calculated yet.</p>';
+
+      // 4. Consistency Champ
+      const constList = $('consistency-champs-list');
+      const consts = sourceStudents.filter(s => (s.attendance_pct || 0) >= 80 && (s.performance_pct || 0) >= 70);
+      constList.innerHTML = consts.length ? consts.map(s => {
+        const consistencyScore = Math.round(((s.attendance_pct || 90) + (s.performance_pct || 80)) / 2);
+        return `
+          <div class="flex items-center justify-between p-2 rounded-xl bg-white/40 border border-slate-100 hover:bg-white transition text-xs cursor-pointer" onclick="closeModal(); openProfile('${esc(s.roll_number)}')">
+            <div>
+              <p class="font-bold text-slate-800">${esc(s.name)} <span class="text-slate-400 font-normal">(${esc(s.roll_number)})</span></p>
+              <p class="text-[10px] text-slate-400">Steady weekly & monthly progress validated</p>
+            </div>
+            <div class="text-right">
+              <span class="font-bold text-blue-600">${consistencyScore} pts</span>
+            </div>
+          </div>`;
+      }).join('') : '<p class="text-slate-400 text-xs py-2 text-center">No consistency stars match the selection.</p>';
+
+      // 5. Class Superstar
+      const superstarList = $('class-superstars-list');
+      const superstar = [...sourceStudents].sort((a,b) => {
+        const scoreA = (a.performance_pct || 0) + (a.attendance_pct || 0) + (a.wellness === 'happy' ? 20 : 0);
+        const scoreB = (b.performance_pct || 0) + (b.attendance_pct || 0) + (b.wellness === 'happy' ? 20 : 0);
+        return scoreB - scoreA;
+      })[0];
+
+      superstarList.innerHTML = superstar ? `
+        <div class="flex items-center justify-between p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 hover:bg-emerald-50 transition text-xs cursor-pointer" onclick="closeModal(); openProfile('${esc(superstar.roll_number)}')">
+          <div>
+            <p class="font-extrabold text-emerald-950">${esc(superstar.name)} <span class="text-emerald-700 font-normal">(${esc(superstar.roll_number)})</span></p>
+            <p class="text-[10px] text-emerald-800 mt-0.5">Class: ${esc(superstar.class_name || '-')} ${esc(superstar.division || '')} • Mood: ${wellEmoji(superstar.wellness)}</p>
+            <p class="text-[9px] text-slate-400 italic mt-1">"${superstar.teacher_remarks || 'Excellent consistent overall display.'}"</p>
+          </div>
+          <div class="text-right">
+            <span class="font-bold text-emerald-700 text-sm block">99.2%</span>
+            <span class="text-[9px] text-slate-400">Overall Score</span>
+          </div>
+        </div>` : '<p class="text-slate-400 text-xs py-2 text-center">Roster is empty.</p>';
+      
+      // Auto-save Snapshot if NOT already saved for this period to demonstrate persistent storage of weekly/monthly/yearly logs
+      if (!isSnapshotUsed && sourceStudents.length > 0 && storedHistory.length === 0 && currentUserRole === 'teacher') {
+        savePeriodSnapshot(mode, dateString, sourceStudents);
+      }
+
+      lucide.createIcons();
+    }
+
+    async function savePeriodSnapshot(key, label, dataList) {
+      if (students.length >= 999) return;
+      const cleanSnapshot = dataList.map(s => ({
+        roll_number: s.roll_number,
+        name: s.name,
+        class_name: s.class_name,
+        division: s.division,
+        attendance_pct: s.attendance_pct,
+        performance_pct: s.performance_pct,
+        marks_math: s.marks_math,
+        marks_science: s.marks_science,
+        marks_english: s.marks_english,
+        homework_done: s.homework_done,
+        wellness: s.wellness,
+        teacher_remarks: s.teacher_remarks
+      }));
+
+      const record = {
+        record_type: 'history_snapshot',
+        period_key: key,
+        period_label: label,
+        snapshot_json: JSON.stringify(cleanSnapshot),
+        created_at: new Date().toISOString()
+      };
+      await window.dataSdk.create(record);
+    }
+
+    // ---------- MODALS ----------
+    function openModal(panel) {
+      document.querySelectorAll('.modal-panel').forEach(p => p.classList.add('hidden'));
+      const el = document.querySelector(`[data-panel="${panel}"]`);
+      if (el) el.classList.remove('hidden');
+      const bd = $('modal-backdrop'); bd.classList.remove('hidden'); bd.classList.add('flex');
+      lucide.createIcons();
+    }
+    function closeModal() { const bd = $('modal-backdrop'); bd.classList.add('hidden'); bd.classList.remove('flex'); $('profile-confirm').classList.add('hidden'); }
+    $('modal-close').addEventListener('click', closeModal);
+    $('modal-backdrop').addEventListener('click', e => { if (e.target === $('modal-backdrop')) closeModal(); });
+
+    document.querySelectorAll('[data-open]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const t = btn.dataset.open;
+        ({ present: openPresent, homework: openHomework, wellness: openWellness, total: openTotal, bus: openBus, notify: openNotify, gate: openGate }[t] || (() => {}))();
+      });
+    });
+
+    // Make individual preview badges trigger the rewards details modal
+    for (let i = 1; i <= 5; i++) {
+      const btn = $(`badge-btn-${i}`);
+      if (btn) {
+        // Prevent events or nested clicks from failing, bind directly
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openRewardsBreakdown();
+        });
+      }
+    }
+
+    $('view-rewards-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      openRewardsBreakdown();
+    });
+    $('rewards-timeline').addEventListener('change', (e) => {
+      selectedRewardsTimeline = e.target.value;
+      renderRewardsBreakdown();
+    });
+
+    // GATE PASS modal filters
+    $('gate-search').addEventListener('input', () => renderGatePasses());
+    $('gate-filter-status').addEventListener('change', () => renderGatePasses());
+
+    function fillList(container, arr) {
+      const c = $(container);
+      c.innerHTML = arr.length
+        ? arr.map(s => `<div class="glass flex items-center justify-between rounded-lg px-2.5 py-1.5 mb-1 cursor-pointer hover:bg-white" onclick="openProfile('${esc(s.roll_number)}')"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-lg font-bold text-xs flex items-center justify-center ${avatarColor(s.roll_number)}">${esc(getInitials(s.name))}</div><div class="text-left">${esc(s.name)} <span class="text-slate-400">(${esc(s.roll_number)})</span></div></div><i data-lucide="chevron-right" style="width:14px;height:14px"></i></div>`).join('')
+        : '<p class="text-slate-400">None</p>';
+      lucide.createIcons();
+    }
+
+    // PRESENT
+    function openPresent() { $('present-date').value = seedDate; updatePresent(seedDate); openModal('present'); }
+    $('present-date').addEventListener('change', e => updatePresent(e.target.value));
+    function updatePresent(date) {
+      const isToday = date === seedDate;
+      fillList('present-list', students.filter(s => isToday ? s.present_today : presentOnDate(s.roll_number, date)));
+      fillList('absent-list', students.filter(s => isToday ? !s.present_today : !presentOnDate(s.roll_number, date)));
+    }
+
+    // HOMEWORK
+    function openHomework() {
+      fillList('hw-done-list', students.filter(s => s.homework_done));
+      fillList('hw-pending-list', students.filter(s => !s.homework_done));
+      openModal('homework');
+    }
+
+    // WELLNESS
+    function openWellness() {
+      fillList('well-happy-list', students.filter(s => s.wellness === 'happy'));
+      fillList('well-neutral-list', students.filter(s => s.wellness === 'neutral'));
+      fillList('well-sad-list', students.filter(s => s.wellness === 'sad'));
+      const happy = students.filter(s => s.wellness === 'happy').length;
+      const sad = students.filter(s => s.wellness === 'sad').length;
+      openModal('wellness');
+      mkChart('chart-wellness', { type: 'line', data: { labels: ['W1', 'W2', 'W3', 'W4', 'W5'], datasets: [{ label: 'Happy', data: [5, 6, 4, 7, happy], borderColor: '#22c55e', tension: .4 }, { label: 'Sad', data: [2, 1, 3, 1, sad], borderColor: '#f43f5e', tension: .4 }] }, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
+    }
+
+    // TOTAL DIRECTORY
+    function openTotal() {
+      const c = $('total-list');
+      c.innerHTML = students.length ? students.map(s => `
+        <div class="glass flex items-center justify-between rounded-lg px-3 py-2 cursor-pointer hover:bg-white" onclick="openProfile('${esc(s.roll_number)}')">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl font-bold text-xs flex items-center justify-center ${avatarColor(s.roll_number)}">${esc(getInitials(s.name))}</div>
+            <div><p class="font-semibold text-slate-700 text-sm">${esc(s.name)}</p><p class="text-[10px] text-slate-400">Roll ${esc(s.roll_number)} • ${esc(s.class_name || '-')} ${esc(s.division || '')}</p></div>
+          </div>
+          <div class="flex items-center gap-2 text-sm"><span class="font-bold text-cyan-600">${s.attendance_pct || 0}%</span><span class="text-lg">${wellEmoji(s.wellness)}</span></div>
+        </div>`).join('') : '<p class="text-center py-6 text-slate-400 text-sm">No students yet.</p>';
+      openModal('total');
+    }
+
+    // BUS
+    function openBus() { renderBusFleet(); openModal('bus'); }
+    function renderBusFleet() {
+      const c = $('bus-fleet-list');
+      c.innerHTML = busesFleet.map(b => {
+        const pax = students.filter(s => s.bus_number === b.number).length;
+        const active = b.number === selectedBusNum ? 'ring-2 ring-cyan-500 bg-cyan-500/10' : 'bg-white/50 hover:bg-white';
+        return `<button type="button" class="text-left p-3 rounded-2xl border border-white/60 transition ${active}" onclick="selectedBusNum='${esc(b.number)}';renderBusFleet();">
+          <div class="flex items-center justify-between mb-1.5"><span class="font-extrabold text-cyan-950 text-sm">${esc(b.number)}</span><span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${b.active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}">${b.active ? 'Transit' : 'Idle'}</span></div>
+          <p class="text-xs text-slate-500 truncate">${esc(b.route)}</p>
+          <div class="flex justify-between mt-2 text-[10px] text-slate-400 font-semibold"><span>${esc(b.speed)}</span><span>${pax} assigned</span></div>
+        </button>`;
+      }).join('');
+      const bus = busesFleet.find(b => b.number === selectedBusNum) || busesFleet[0];
+      $('active-bus-driver').textContent = bus.driver;
+      $('active-bus-contact').textContent = bus.contact;
+      $('active-bus-speed').textContent = bus.speed;
+      $('active-bus-stop').textContent = bus.stop;
+      $('active-bus-route').textContent = bus.waypoints;
+      $('active-bus-gps').textContent = `Coordinates: ${bus.lat}, ${bus.lon} (${bus.active ? 'Active Signal' : 'No Signal - Idle'})`;
+      
+      const pax = students.filter(s => s.bus_number === bus.number);
+      $('active-bus-passengers').innerHTML = pax.length ? pax.map(s => {
+        // Generate deterministic pick/drop points based on roll number
+        const val = s.roll_number ? parseInt(s.roll_number, 10) : 10001;
+        const pick = val % 2 === 0 ? "Main Highway Junction" : "Sector 4 Complex Gates";
+        const drop = val % 2 === 0 ? "Opposite Public Library" : "East Side Corner Street";
+        return `
+          <div class="flex items-center justify-between gap-1.5 bg-white/80 border border-slate-100 p-2 rounded-xl hover:bg-white transition cursor-pointer" onclick="openProfile('${esc(s.roll_number)}')">
+            <div class="flex items-center gap-1.5">
+              <span class="w-6 h-6 rounded-md font-bold text-[9px] flex items-center justify-center ${avatarColor(s.roll_number)}">${esc(getInitials(s.name))}</span>
+              <div class="text-left">
+                <span class="text-[10px] text-slate-700 font-bold block">${esc(s.name)} <span class="text-slate-400">(${esc(s.roll_number)})</span></span>
+                <span class="text-[8px] text-slate-400">Class: ${esc(s.class_name || '-')}</span>
+              </div>
+            </div>
+            <div class="text-right text-[8px] text-slate-500 leading-tight">
+              <p><strong class="text-cyan-700">Pick:</strong> ${pick}</p>
+              <p><strong class="text-rose-600">Drop:</strong> ${drop}</p>
+            </div>
+          </div>`;
+      }).join('') : '<span class="text-[11px] text-slate-400">No students on this route.</span>';
+    }
+
+    // NOTIFY
+    function openNotify() { renderAnnouncements(); openModal('notify'); }
+    $('new-broadcast-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const title = $('ann-title').value.trim();
+      const body = $('ann-desc').value.trim();
+      if (!title || !body) return;
+      announcements.unshift({ id: Date.now(), title, body, date: seedDate, sender: 'Teacher', read: false });
+      $('ann-title').value = ''; $('ann-desc').value = '';
+      renderAnnouncements();
+      $('stat-notify').textContent = announcements.length;
+    });
+    function renderAnnouncements() {
+      $('announcements-log-container').innerHTML = announcements.map(a => `
+        <div class="p-3.5 rounded-2xl border transition bg-white/50 border-white/60 ${!a.read ? 'ring-1 ring-violet-200' : ''}">
+          <div class="flex items-center justify-between mb-1"><span class="font-extrabold text-slate-700 text-sm">${esc(a.title)}</span><span class="text-[10px] text-slate-400 font-bold">${esc(a.date)}</span></div>
+          <p class="text-xs text-slate-600 leading-relaxed">${esc(a.body)}</p>
+          <div class="flex items-center justify-between mt-2.5 text-[10px] text-slate-400 font-semibold"><span>By: ${esc(a.sender)}</span><button type="button" class="text-indigo-600 hover:underline font-bold" onclick="toggleAnnounceRead(${a.id})">${a.read ? 'Mark Unread' : 'Mark as Read'}</button></div>
+        </div>`).join('');
+    }
+    function toggleAnnounceRead(id) { const a = announcements.find(x => x.id === id); if (a) { a.read = !a.read; renderAnnouncements(); } }
+
+    // GATE
+    function openGate() { renderGatePasses(); openModal('gate'); }
+    function renderGatePasses() {
+      const q = ($('gate-search').value || '').toLowerCase();
+      const statusFilter = $('gate-filter-status').value;
+      
+      const filtered = gatePasses.filter(g => {
+        const matchesQuery = (g.name || '').toLowerCase().includes(q) || (g.roll_number || '').includes(q);
+        const matchesStatus = statusFilter === 'all' || g.status === statusFilter;
+        return matchesQuery && matchesStatus;
+      });
+
+      $('gate-requests-container').innerHTML = filtered.length ? filtered.map(g => {
+        const isPending = g.status === 'Pending';
+        const col = g.status === 'Approved' ? 'bg-emerald-100 text-emerald-700' : g.status === 'Rejected' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700';
+        return `<div class="p-3.5 rounded-2xl border bg-white/50 border-white/60">
+          <div class="flex items-center justify-between mb-2"><span class="flex items-center gap-2 cursor-pointer hover:underline" onclick="openProfile('${esc(g.roll_number)}')"><span class="w-6 h-6 rounded-lg font-bold text-[10px] flex items-center justify-center ${avatarColor(g.roll_number)}">${esc(getInitials(g.name))}</span><span class="font-extrabold text-slate-700 text-xs">${esc(g.name)} (${esc(g.roll_number)})</span></span><span class="text-[9px] font-bold text-slate-400">Req: ${esc(g.time)}</span></div>
+          <p class="text-xs text-slate-500 mb-2.5 leading-relaxed"><strong class="text-slate-600">Reason:</strong> ${esc(g.reason)}</p>
+          <div class="flex items-center justify-between"><span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase ${col}">${esc(g.status)}</span>${isPending ? `<div class="flex gap-2"><button type="button" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-lg" onclick="decideGatePass(${g.id},'Approved')">Approve</button><button type="button" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] rounded-lg" onclick="decideGatePass(${g.id},'Rejected')">Reject</button></div>` : ''}</div>
+        </div>`;
+      }).join('') : '<p class="text-center py-6 text-slate-400 text-xs">No matching requests found.</p>';
+    }
+    async function decideGatePass(id, status) {
+      const g = gatePasses.find(x => x.id === id);
+      if (!g) return;
+      g.status = status;
+      renderGatePasses();
+      $('stat-gate').textContent = gatePasses.filter(x => x.status === 'Pending').length;
+      const s = students.find(x => x.roll_number === g.roll_number);
+      if (s) { await window.dataSdk.update({ ...s, gate_pass: status }); }
+    }
+
+    // ---------- FORM ----------
+    function openForm(roll) {
+      editingRoll = roll;
+      const s = roll ? students.find(x => x.roll_number === roll) : null;
+      $('form-heading').textContent = roll ? 'Edit Student Profile' : 'Add New Student';
+      $('f-roll').disabled = !!roll;
+      $('form-error').classList.add('hidden');
+      const set = (id, v) => $(id).value = v == null ? '' : v;
+      set('f-roll', s && s.roll_number); set('f-name', s && s.name); set('f-class', s && s.class_name);
+      set('f-div', s && s.division); set('f-pname', s && s.parent_name); set('f-pcontact', s && s.parent_contact);
+      set('f-pemail', s && s.parent_email); set('f-blood', s && s.blood_group); set('f-address', s && s.address);
+      set('f-att', s && s.attendance_pct); set('f-perf', s && s.performance_pct); set('f-math', s && s.marks_math);
+      set('f-science', s && s.marks_science); set('f-english', s && s.marks_english); set('f-bus', s && s.bus_number);
+      set('f-remarks', s && s.teacher_remarks);
+      $('f-gate').value = (s && s.gate_pass) || 'None';
+      $('f-well').value = (s && s.wellness) || 'neutral';
+      $('f-present').checked = !!(s && s.present_today);
+      $('f-hw').checked = !!(s && s.homework_done);
+      openModal('form');
+    }
+    $('add-student-btn').addEventListener('click', () => openForm(null));
+    $('form-cancel').addEventListener('click', closeModal);
+
+    $('student-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const err = $('form-error');
+      const roll = $('f-roll').value.trim();
+      if (!/^\d{5}$/.test(roll)) { err.textContent = 'Roll Number must be exactly 5 digits.'; err.classList.remove('hidden'); return; }
+      if (!editingRoll && students.some(s => s.roll_number === roll)) { err.textContent = 'A student with this Roll Number already exists.'; err.classList.remove('hidden'); return; }
+      if (!editingRoll && students.length >= 999) { err.textContent = 'Maximum of 999 students reached.'; err.classList.remove('hidden'); return; }
+      err.classList.add('hidden');
+      const num = id => { const v = parseFloat($(id).value); return isNaN(v) ? 0 : v; };
+      const record = {
+        roll_number: roll, name: $('f-name').value.trim(), class_name: $('f-class').value.trim(),
+        division: $('f-div').value.trim(), parent_name: $('f-pname').value.trim(),
+        parent_contact: $('f-pcontact').value.trim(), parent_email: $('f-pemail').value.trim(),
+        address: $('f-address').value.trim(), blood_group: $('f-blood').value.trim(), photo_url: '',
+        attendance_pct: num('f-att'), present_today: $('f-present').checked, homework_done: $('f-hw').checked,
+        performance_pct: num('f-perf'), wellness: $('f-well').value, teacher_remarks: $('f-remarks').value.trim(),
+        bus_number: $('f-bus').value.trim(), gate_pass: $('f-gate').value,
+        marks_math: num('f-math'), marks_science: num('f-science'), marks_english: num('f-english'),
+        created_at: new Date().toISOString()
+      };
+      const btn = $('form-save'); const label = btn.textContent; btn.disabled = true; btn.textContent = 'Saving...';
+      let result;
+      if (editingRoll) {
+        const orig = students.find(s => s.roll_number === editingRoll);
+        result = await window.dataSdk.update({ ...orig, ...record, __backendId: orig.__backendId, created_at: orig.created_at });
+      } else {
+        result = await window.dataSdk.create(record);
+      }
+      btn.disabled = false; btn.textContent = label;
+      if (result.isOk) closeModal();
+      else { err.textContent = 'Could not save. Please try again.'; err.classList.remove('hidden'); }
+    });
+
+    // ---------- PROFILE ----------
+    function openProfile(roll) {
+      const s = students.find(x => x.roll_number === roll);
+      if (!s) return;
+      profileRoll = roll;
+      $('profile-name').textContent = s.name;
+      $('profile-meta').textContent = `Roll ${s.roll_number} • ${s.class_name || '-'} ${s.division || ''} ${wellEmoji(s.wellness)}`;
+      const pc = $('profile-photo-container');
+      pc.className = `w-20 h-20 rounded-2xl shadow overflow-hidden flex items-center justify-center font-bold text-xl ${avatarColor(s.roll_number)}`;
+      pc.textContent = getInitials(s.name);
+      const info = [
+        ['Parent', s.parent_name], ['Contact', s.parent_contact], ['Email', s.parent_email],
+        ['Address', s.address], ['Blood', s.blood_group], ['Bus', s.bus_number],
+        ['Gate Pass', s.gate_pass], ['Attendance', (s.attendance_pct || 0) + '%'], ['Performance', (s.performance_pct || 0) + '%'],
+        ['Homework', s.homework_done ? 'Done' : 'Pending'], ['Present', s.present_today ? 'Yes' : 'No'], ['Remarks', s.teacher_remarks || '—']
+      ];
+      $('profile-info').innerHTML = info.map(([k, v]) => `<div class="glass rounded-lg px-2 py-1.5"><span class="text-slate-400 text-xs block">${esc(k)}</span><span class="font-medium">${esc(v || '—')}</span></div>`).join('');
+      const risk = (s.performance_pct || 0) < 50 ? 'High Risk' : (s.performance_pct || 0) < 70 ? 'Medium Risk' : 'Low Risk';
+      const weak = [['Math', s.marks_math || 0], ['Science', s.marks_science || 0], ['English', s.marks_english || 0]].sort((a, b) => a[1] - b[1])[0];
+      $('profile-ai').textContent = `AI predicted score ${Math.round(((s.performance_pct || 0) + (s.attendance_pct || 0)) / 2)}% • ${risk}. Weakest subject: ${weak[0]}. Suggestion: extra practice in ${weak[0]} and consistent homework.`;
+      openModal('profile');
+      mkChart('chart-profile-marks', { type: 'bar', data: { labels: ['Math', 'Science', 'English'], datasets: [{ data: [s.marks_math || 0, s.marks_science || 0, s.marks_english || 0], backgroundColor: ['#4f46e5', '#06b6d4', '#a855f7'] }] }, options: chartOpts() });
+      mkChart('chart-profile-growth', { type: 'line', data: { labels: ['T1', 'T2', 'T3', 'T4'], datasets: [{ data: [(s.performance_pct || 0) - 15, (s.performance_pct || 0) - 8, (s.performance_pct || 0) - 3, s.performance_pct || 0], borderColor: '#7c3aed', backgroundColor: 'rgba(124,58,237,.15)', fill: true, tension: .4 }] }, options: chartOpts() });
+    }
+    $('profile-edit').addEventListener('click', () => openForm(profileRoll));
+    $('profile-delete').addEventListener('click', () => $('profile-confirm').classList.remove('hidden'));
+    $('profile-confirm-no').addEventListener('click', () => $('profile-confirm').classList.add('hidden'));
+    $('profile-confirm-yes').addEventListener('click', async () => {
+      const s = students.find(x => x.roll_number === profileRoll);
+      if (!s) return;
+      const btn = $('profile-confirm-yes'); const label = btn.textContent; btn.disabled = true; btn.textContent = '...';
+      const r = await window.dataSdk.delete(s);
+      btn.disabled = false; btn.textContent = label;
+      if (r.isOk) closeModal();
+    });
+
+    // ---------- PARENT VIEW ----------
+    function renderParent() {
+      const s = students.find(x => x.roll_number === currentLinkedRoll);
+      const empty = $('parent-empty'), content = $('parent-content');
+      if (!s) { empty.classList.remove('hidden'); content.classList.add('hidden'); lucide.createIcons(); return; }
+      empty.classList.add('hidden'); content.classList.remove('hidden');
+      $('parent-name').textContent = s.name;
+      $('parent-class').textContent = `Roll ${s.roll_number} • ${s.class_name || '-'} ${s.division || ''}`;
+      $('parent-att').textContent = (s.attendance_pct || 0) + '%';
+      $('parent-perf').textContent = (s.performance_pct || 0) + '%';
+      
+      const risk = (s.performance_pct || 0) < 50 ? 'High Risk' : (s.performance_pct || 0) < 70 ? 'Medium Risk' : 'Low Risk';
+      $('parent-ai').textContent = `Wellness ${wellEmoji(s.wellness)} • ${risk}. AI suggests steady homework habits and revision.`;
+      
+      // Dynamic academic progress tracking bars
+      const mathMarks = s.marks_math || 0;
+      const scienceMarks = s.marks_science || 0;
+      const englishMarks = s.marks_english || 0;
+      
+      $('p-math-val').textContent = `${mathMarks}/100`;
+      $('p-math-bar').style.width = `${mathMarks}%`;
+      $('p-science-val').textContent = `${scienceMarks}/100`;
+      $('p-science-bar').style.width = `${scienceMarks}%`;
+      $('p-english-val').textContent = `${englishMarks}/100`;
+      $('p-english-bar').style.width = `${englishMarks}%`;
+      
+      // Dynamic Milestones
+      const milestonesContainer = $('parent-milestones');
+      const milestoneData = [
+        { label: "Attendance Star Milestone", desc: "Maintains 90%+ school presence criteria", achieved: (s.attendance_pct || 0) >= 90 },
+        { label: "Classroom Homework Champ", desc: "No pending homework tasks this week", achieved: !!s.homework_done },
+        { label: "Elite Performance Badge", desc: "Achieved average grade of 80%+", achieved: ((mathMarks + scienceMarks + englishMarks) / 3) >= 80 }
+      ];
+      
+      milestonesContainer.innerHTML = milestoneData.map(m => `
+        <div class="flex items-start gap-2.5 p-2 rounded-lg bg-white/45 border border-slate-100/50">
+          <span class="shrink-0 mt-0.5">${m.achieved ? '<i data-lucide="check-circle-2" class="text-emerald-500" style="width:14px;height:14px"></i>' : '<i data-lucide="circle" class="text-slate-300" style="width:14px;height:14px"></i>'}</span>
+          <div>
+            <p class="font-bold ${m.achieved ? 'text-indigo-950' : 'text-slate-400 line-through'}">${esc(m.label)}</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">${esc(m.desc)}</p>
+          </div>
+        </div>
+      `).join('');
+
+      // Dynamic Live Bus Tracking with Proximity Alerts (Simulated Live Updates)
+      const busNum = s.bus_number || 'Bus 12';
+      const assignedBus = busesFleet.find(b => b.number === busNum) || busesFleet[0];
+      
+      // Compute realistic distance, ETA and live status based on student details
+      const rollSeed = parseInt(s.roll_number, 10) || 10001;
+      const isRouteActive = assignedBus.active;
+      const proximityDistance = isRouteActive ? `${((rollSeed % 15) / 4 + 0.3).toFixed(1)} km` : 'Bus Depot';
+      const proximityMinutes = isRouteActive ? Math.ceil((rollSeed % 15) + 3) : 0;
+      const isClose = isRouteActive && (rollSeed % 15) <= 5;
+
+      const alertBadge = $('parent-proximity-alert');
+      if (isClose) {
+        alertBadge.textContent = "PROXIMITY ALERT: NEARBY";
+        alertBadge.classList.remove('hidden');
+      } else {
+        alertBadge.classList.add('hidden');
+      }
+
+      $('parent-bus-status').textContent = isRouteActive ? 'IN TRANSIT' : 'NOT SCHEDULED';
+      $('parent-bus-dist').textContent = proximityDistance;
+      $('parent-bus-eta').textContent = isRouteActive ? `${proximityMinutes} mins` : '—';
+      
+      $('parent-bus').textContent = `Assigned to ${assignedBus.number} • Driver: ${assignedBus.driver} (${assignedBus.contact}) • Current Stop: ${assignedBus.stop}.`;
+      
+      $('parent-remarks').textContent = s.teacher_remarks || 'No remarks yet.';
+      const pc = $('parent-photo-container');
+      pc.className = `w-24 h-24 rounded-2xl mx-auto shadow-lg overflow-hidden flex items-center justify-center font-bold text-2xl ${avatarColor(s.roll_number)}`;
+      pc.textContent = getInitials(s.name);
+      lucide.createIcons();
+    }
+
+    // ---------- AUTH FLOW ----------
+    $('go-teacher-login').addEventListener('click', () => { $('portal-selector').classList.add('hidden'); $('teacher-login-screen').classList.remove('hidden'); });
+    $('go-parent-login').addEventListener('click', () => { $('portal-selector').classList.add('hidden'); $('parent-login-screen').classList.remove('hidden'); });
+    document.querySelectorAll('.back-to-portals-btn').forEach(btn => btn.addEventListener('click', () => {
+      $('teacher-login-screen').classList.add('hidden'); $('parent-login-screen').classList.add('hidden');
+      $('portal-selector').classList.remove('hidden'); $('t-login-error').classList.add('hidden'); $('p-login-error').classList.add('hidden');
+    }));
+
+    $('teacher-login-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const err = $('t-login-error');
+      if ($('t-username').value.trim() === 'sahil0099' && $('t-password').value === '1234') {
+        err.classList.add('hidden'); currentUserRole = 'teacher'; currentLinkedRoll = null; enterDashboard();
+      } else { err.textContent = 'Invalid credentials. Access denied.'; err.classList.remove('hidden'); }
+    });
+
+    $('parent-login-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const roll = $('p-roll-login').value.trim();
+      const err = $('p-login-error');
+      if (!students.some(s => s.roll_number === roll)) { err.textContent = 'No matching child found for this roll number.'; err.classList.remove('hidden'); return; }
+      err.classList.add('hidden'); currentUserRole = 'parent'; currentLinkedRoll = roll; enterDashboard();
+    });
+
+    function enterDashboard() {
+      $('landing-portal').classList.add('hidden');
+      $('dashboard-app').classList.remove('hidden');
+      $('teacher-view').classList.toggle('hidden', currentUserRole !== 'teacher');
+      $('parent-view').classList.toggle('hidden', currentUserRole !== 'parent');
+      render();
+      lucide.createIcons();
+    }
+
+    $('nav-logout-btn').addEventListener('click', () => {
+      currentUserRole = null; currentLinkedRoll = null;
+      $('t-username').value = ''; $('t-password').value = '';
+      $('p-roll-login').value = ''; $('p-parent-email').value = '';
+      $('dashboard-app').classList.add('hidden');
+      $('teacher-login-screen').classList.add('hidden'); $('parent-login-screen').classList.add('hidden');
+      $('portal-selector').classList.remove('hidden'); $('landing-portal').classList.remove('hidden');
+    });
+
+    $('student-search').addEventListener('input', renderList);
+    lucide.createIcons();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1a08174d38e3a41',t:'MTc4Mzg2NDEwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
